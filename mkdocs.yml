@@ -1,0 +1,85 @@
+site_name: Battousai — Autonomous Intelligence Operating System
+site_url: https://dpl1979.github.io/battousai
+site_description: An operating system designed exclusively for AI agents
+site_author: Battousai Project
+repo_url: https://github.com/DPL1979/battousai
+repo_name: DPL1979/battousai
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Demo Walkthrough: getting-started/demo.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Kernel: architecture/kernel.md
+    - Scheduler: architecture/scheduler.md
+    - IPC & Messaging: architecture/ipc.md
+    - Memory: architecture/memory.md
+    - Filesystem: architecture/filesystem.md
+  - Agent Development:
+    - Agent API: agents/api.md
+    - LLM Agents: agents/llm.md
+    - Supervision Trees: agents/supervision.md
+    - Custom Agents: agents/custom.md
+  - Tools:
+    - Built-in Tools: tools/builtin.md
+    - Extended Tools: tools/extended.md
+  - Security:
+    - Capability System: security/capabilities.md
+    - Typed Schemas: security/schemas.md
+    - Contracts & Verification: security/contracts.md
+  - Advanced:
+    - Networking: advanced/networking.md
+    - Federation: advanced/federation.md
+    - Hardware Abstraction: advanced/hal.md
+    - Self-Modification: advanced/evolution.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/DPL1979/battousai
