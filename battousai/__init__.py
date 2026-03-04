@@ -1,0 +1,87 @@
+"""
+Battousai - Autonomous Intelligence Operating System
+================================================
+An operating system designed exclusively for AI agents.
+No human users. No GUI. No terminal. Agents are first-class citizens.
+
+Version: 0.2.0
+
+New in v0.2.0:
+    - LLM integration (llm.py): LLMProvider, LLMAgent, ContextWindow
+    - Supervision trees (supervisor.py): Erlang/OTP-style fault tolerance
+    - Extended tools (tools_extended.py): 9 new tools including vector_store,
+      python_repl, task_queue, and data_pipeline
+    - Capability-based security (capabilities.py): least-privilege token system
+    - Typed memory schemas (schemas.py): runtime-validated memory contracts
+    - Network stack (network.py): gossip, service discovery, agent migration
+    - Multi-kernel federation (federation.py): Raft consensus, load balancing
+    - Self-modification & evolution (evolution.py): code sandbox, genetic pool
+    - Hardware abstraction layer (hal.py): simulated GPIO, sensors, cameras
+    - Formal verification & contracts (contracts.py): Design-by-Contract runtime
+"""
+
+__version__ = "0.2.0"
+__author__ = "Battousai Project"
+__description__ = "Autonomous Intelligence Operating System — an OS built for AI agents"
+
+# ---------------------------------------------------------------------------
+# Core runtime
+# ---------------------------------------------------------------------------
+from battousai.kernel import Kernel
+from battousai.logger import Logger, LogLevel
+
+# ---------------------------------------------------------------------------
+# Agent base classes
+# ---------------------------------------------------------------------------
+from battousai.agent import Agent, CoordinatorAgent, WorkerAgent, MonitorAgent
+
+# ---------------------------------------------------------------------------
+# LLM integration (v0.2.0)
+# ---------------------------------------------------------------------------
+from battousai.llm import LLMAgent, LLMRouter, MockLLMProvider, ContextWindow
+
+# ---------------------------------------------------------------------------
+# Supervision trees (v0.2.0)
+# ---------------------------------------------------------------------------
+from battousai.supervisor import (
+    SupervisorAgent,
+    ChildSpec,
+    RestartStrategy,
+    RestartType,
+)
+
+# ---------------------------------------------------------------------------
+# Security layer (v0.2.0)
+# ---------------------------------------------------------------------------
+from battousai.capabilities import CapabilityManager, CapabilityType, CapabilityViolation
+from battousai.contracts import ContractMonitor, Contract, SafetyEnvelope
+
+__all__ = [
+    # Core
+    "Kernel",
+    "Logger",
+    "LogLevel",
+    # Agent base classes
+    "Agent",
+    "CoordinatorAgent",
+    "WorkerAgent",
+    "MonitorAgent",
+    # LLM integration
+    "LLMAgent",
+    "LLMRouter",
+    "MockLLMProvider",
+    "ContextWindow",
+    # Supervision
+    "SupervisorAgent",
+    "ChildSpec",
+    "RestartStrategy",
+    "RestartType",
+    # Security
+    "CapabilityManager",
+    "CapabilityType",
+    "CapabilityViolation",
+    "ContractMonitor",
+    "Contract",
+    "SafetyEnvelope",
+]
+
