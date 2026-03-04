@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Read changelog
+        id: changelog
+        run: |
+          # Extract the section for this version from CHANGELOG.md
+          echo "BODY<<EOF" >> $GITHUB_OUTPUT
+          sed -n '/^## \['"${GITHUB_REF#refs/tags/v}"'\]/,/^## \[/p' CHANGELOG.md | head -n -1 >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: "Battousai ${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## Battousai ${{ steps.version.outputs.VERSION }} — Autonomous Intelligence Operating System
+
+            The first public release of Battousai: an operating system built exclusively for AI agents.
+
+            ### Highlights
+
+            - **13,691 lines** of pure Python, **zero external dependencies**
+            - **20 modules** covering kernel, scheduling, IPC, memory, filesystem, tools, LLM integration, supervision trees, networking, federation, security, hardware abstraction, and self-modification
+            - **389 tests** with full coverage of all modules
+            - Runs on Python 3.10+
+
+            ### Quick Start
+
+            ```bash
+            pip install battousai
+            python -m battousai.main
+            ```
+          draft: false
+          prerelease: false
+          generate_release_notes: false

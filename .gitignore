@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Build / packaging
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Archives
+*.tar.gz
+
+# OS
+.DS_Store
+
+# Secrets
+.env
+
+# IDEs
+.idea/
+.vscode/
+
+# Databases
+*.db
+*.sqlite3
