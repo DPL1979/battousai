@@ -4,7 +4,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 544 passing](https://img.shields.io/badge/tests-544%20passing-brightgreen.svg)](#testing)
+[![Tests: 857 passing](https://img.shields.io/badge/tests-857%20passing-brightgreen.svg)](#testing)
 [![Dependencies: 0](https://img.shields.io/badge/dependencies-0-orange.svg)](#zero-dependencies)
 
 ---
@@ -198,7 +198,7 @@ Battousai maps to all 10 risks in the [OWASP Top 10 for Agentic Applications (20
 └──────────────┴──────────────┴──────────────┴────────────┘
 ```
 
-### Core Modules (24 files, ~14,600 lines)
+### Core Modules (29 files, ~21,000 lines)
 
 | Module | Purpose |
 |--------|---------|
@@ -209,10 +209,15 @@ Battousai maps to all 10 risks in the [OWASP Top 10 for Agentic Applications (20
 | `supervisor.py` | Erlang-style supervision trees (one_for_one, one_for_all, rest_for_one) |
 | `memory.py` | Per-agent memory spaces, shared regions, typed schemas |
 | `filesystem.py` | Virtual filesystem with permissions |
-| `real_fs.py` | **NEW** — Sandboxed real filesystem with per-agent jails |
-| `providers.py` | **NEW** — Real LLM providers (OpenAI, Anthropic, Ollama) via stdlib |
-| `persistence.py` | **NEW** — SQLite persistence with WAL mode, checkpoint/restore |
-| `isolation.py` | **NEW** — Process-level agent isolation, sandbox configs |
+| `real_fs.py` | Sandboxed real filesystem with per-agent jails |
+| `providers.py` | Real LLM providers (OpenAI, Anthropic, Ollama) via stdlib |
+| `persistence.py` | SQLite persistence with WAL mode, checkpoint/restore |
+| `isolation.py` | Process-level agent isolation, sandbox configs |
+| `mcp_server.py` | MCP JSON-RPC 2.0 server with capability-gated tool access |
+| `mcp_client.py` | MCP client for connecting to external MCP servers |
+| `approval.py` | Human-in-the-loop approval workflow (risk tiers, audit trail) |
+| `integrity.py` | SHA-256 hash-chain memory integrity, tamper detection |
+| `sandbox.py` | OS-level sandboxing: seccomp, namespaces, rlimits, env sanitization |
 | `scheduler.py` | Priority-based tick scheduler (10 levels) |
 | `ipc.py` | Inter-agent messaging, mailboxes, bulletin board |
 | `network.py` | Gossip protocol, service discovery |
@@ -249,7 +254,7 @@ When an agent fails:
 ## Testing
 
 ```bash
-# Run all 544 tests (takes ~0.2 seconds)
+# Run all 857 tests (takes ~3.5 seconds)
 python -m unittest discover -s tests -v
 
 # Run a specific module
@@ -258,7 +263,7 @@ python -m unittest tests.test_providers -v
 python -m unittest tests.test_isolation -v
 ```
 
-24 test files covering every module. Zero external test dependencies.
+29 test files covering every module. Zero external test dependencies.
 
 ---
 
@@ -305,23 +310,25 @@ python -m battousai.main
 
 ## Roadmap
 
-### v0.4.0 — MCP & Human-in-the-Loop
-- [ ] MCP server adapter (expose tools as MCP-compatible)
-- [ ] MCP client adapter (connect to external MCP servers with capability gating)
-- [ ] Human-in-the-loop approval workflow for high-risk actions
-- [ ] Memory integrity hashing (tamper detection)
-
-### v0.5.0 — Production Hardening
-- [ ] seccomp/namespace isolation (Linux)
-- [ ] Sandbox profiles (macOS)
+### v0.4.0 — Production Hardening
+- [x] MCP server adapter (expose tools as MCP-compatible)
+- [x] MCP client adapter (connect to external MCP servers with capability gating)
+- [x] Human-in-the-loop approval workflow for high-risk actions
+- [x] Memory integrity hashing (tamper detection)
+- [x] OS-level sandboxing (seccomp, namespaces, rlimits)
 - [ ] IPC message signing (HMAC)
 - [ ] Agent behavioral drift detection
 
-### v1.0.0 — Production Ready
+### v0.5.0 — Launch
 - [ ] Comprehensive security audit
-- [ ] Performance benchmarks
+- [ ] Performance benchmarks against E2B/Modal
 - [ ] PyPI stable release
 - [ ] GitHub Codespace one-click demo
+
+### v1.0.0 — Production Ready
+- [ ] seccomp + namespace hardening with test coverage
+- [ ] Formal verification of capability model
+- [ ] Plugin architecture for custom security policies
 
 ---
 
