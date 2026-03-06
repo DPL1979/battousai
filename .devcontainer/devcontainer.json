@@ -1,0 +1,28 @@
+{
+  "name": "Battousai Development",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "python -c 'import battousai; print(f\"Battousai v{battousai.__version__} ready\")'",
+  "postStartCommand": "echo '\\n🔥 Battousai dev environment ready. Try:\\n   python examples/demo.py\\n   python examples/security_benchmark.py\\n   python -m unittest discover -s tests -v\\n'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.unittestEnabled": true,
+        "python.testing.unittestArgs": [
+          "-v",
+          "-s",
+          "tests",
+          "-p",
+          "test_*.py"
+        ],
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "forwardPorts": [],
+  "features": {}
+}

@@ -7,7 +7,7 @@ name = "battousai"
 version = "0.3.0"
 description = "A lightweight Python runtime for sandboxed AI agents — capability-based security, fault-tolerant supervision, and memory isolation with zero dependencies."
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 requires-python = ">=3.10"
 authors = [
     {name = "DPL1979"}

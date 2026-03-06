@@ -4,7 +4,12 @@ Battousai - Autonomous Intelligence Operating System
 An operating system designed exclusively for AI agents.
 No human users. No GUI. No terminal. Agents are first-class citizens.
 
-Version: 0.5.0
+Version: 0.6.0
+
+New in v0.6.0:
+    - OS-level process sandbox (sandbox.py): seccomp-BPF, Linux namespaces,
+      resource limits, environment sanitization; SandboxedProcess, SandboxProfile,
+      predefined profiles (MINIMAL/STANDARD/NETWORK/PRIVILEGED), capability_to_profile
 
 New in v0.5.0:
     - Human-in-the-Loop Approval Workflow (approval.py): risk tiers, approval
@@ -128,6 +133,25 @@ from battousai.integrity import (
     EntryExpiredError,
 )
 
+# ---------------------------------------------------------------------------
+# OS-Level Sandbox (v0.6.0)
+# ---------------------------------------------------------------------------
+from battousai.sandbox import (
+    SandboxedProcess,
+    SandboxProfile,
+    PROFILE_MINIMAL,
+    PROFILE_STANDARD,
+    PROFILE_NETWORK,
+    PROFILE_PRIVILEGED,
+    EnvironmentSanitizer,
+    SeccompFilter,
+    NamespaceIsolation,
+    ResourceLimiter,
+    EnforcementReport,
+    SandboxResult,
+    capability_to_profile,
+)
+
 __all__ = [
     # Core
     "Kernel",
@@ -201,5 +225,19 @@ __all__ = [
     "IntegrityViolation",
     "EntryNotFoundError",
     "EntryExpiredError",
+    # OS-Level Sandbox (v0.6.0)
+    "SandboxedProcess",
+    "SandboxProfile",
+    "PROFILE_MINIMAL",
+    "PROFILE_STANDARD",
+    "PROFILE_NETWORK",
+    "PROFILE_PRIVILEGED",
+    "EnvironmentSanitizer",
+    "SeccompFilter",
+    "NamespaceIsolation",
+    "ResourceLimiter",
+    "EnforcementReport",
+    "SandboxResult",
+    "capability_to_profile",
 ]
 
