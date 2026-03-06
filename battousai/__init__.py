@@ -4,7 +4,11 @@ Battousai - Autonomous Intelligence Operating System
 An operating system designed exclusively for AI agents.
 No human users. No GUI. No terminal. Agents are first-class citizens.
 
-Version: 0.3.0
+Version: 0.4.0
+
+New in v0.4.0:
+    - MCP Server adapter (mcp_server.py): expose Battousai tools as an MCP server
+    - MCP Client adapter (mcp_client.py): connect to external MCP servers
 
 New in v0.3.0:
     - Real LLM providers (providers.py): OpenAI, Anthropic, Ollama — zero deps
@@ -78,6 +82,12 @@ from battousai.real_fs import SandboxedFilesystem
 from battousai.persistence import PersistenceLayer
 from battousai.isolation import IsolatedAgentProcess, ProcessPool, SandboxConfig
 
+# ---------------------------------------------------------------------------
+# MCP adapters (v0.4.0)
+# ---------------------------------------------------------------------------
+from battousai.mcp_server import MCPServer, MCPServerConfig, MCPProtocolError
+from battousai.mcp_client import MCPClient, MCPClientConfig, MCPConnectionError
+
 __all__ = [
     # Core
     "Kernel",
@@ -118,5 +128,12 @@ __all__ = [
     "IsolatedAgentProcess",
     "ProcessPool",
     "SandboxConfig",
+    # MCP adapters (v0.4.0)
+    "MCPServer",
+    "MCPServerConfig",
+    "MCPProtocolError",
+    "MCPClient",
+    "MCPClientConfig",
+    "MCPConnectionError",
 ]
 
