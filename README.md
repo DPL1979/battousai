@@ -1,10 +1,10 @@
 # Battousai
 
-**A lightweight Python runtime for sandboxed AI agents — capability-based security, fault-tolerant supervision, and memory isolation in under 16K lines with zero dependencies.**
+**A lightweight Python runtime for sandboxed AI agents — capability-based security, fault-tolerant supervision, and memory isolation in ~21K lines with zero dependencies.**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 857 passing](https://img.shields.io/badge/tests-857%20passing-brightgreen.svg)](#testing)
+[![Tests: 1120 passing](https://img.shields.io/badge/tests-1120%20passing-brightgreen.svg)](#testing)
 [![Dependencies: 0](https://img.shields.io/badge/dependencies-0-orange.svg)](#zero-dependencies)
 
 ---
@@ -198,7 +198,7 @@ Battousai maps to all 10 risks in the [OWASP Top 10 for Agentic Applications (20
 └──────────────┴──────────────┴──────────────┴────────────┘
 ```
 
-### Core Modules (29 files, ~21,000 lines)
+### Core Modules (31 files, ~21,400 lines)
 
 | Module | Purpose |
 |--------|---------|
@@ -218,6 +218,8 @@ Battousai maps to all 10 risks in the [OWASP Top 10 for Agentic Applications (20
 | `approval.py` | Human-in-the-loop approval workflow (risk tiers, audit trail) |
 | `integrity.py` | SHA-256 hash-chain memory integrity, tamper detection |
 | `sandbox.py` | OS-level sandboxing: seccomp, namespaces, rlimits, env sanitization |
+| `ipc_signing.py` | HMAC-SHA256 message signing/verification, KeyRing, policy enforcement |
+| `drift.py` | Agent behavioral drift detection: profiling, scoring, quarantine |
 | `scheduler.py` | Priority-based tick scheduler (10 levels) |
 | `ipc.py` | Inter-agent messaging, mailboxes, bulletin board |
 | `network.py` | Gossip protocol, service discovery |
@@ -254,7 +256,7 @@ When an agent fails:
 ## Testing
 
 ```bash
-# Run all 857 tests (takes ~3.5 seconds)
+# Run all 1,120 tests (takes ~5 seconds)
 python -m unittest discover -s tests -v
 
 # Run a specific module
@@ -263,7 +265,7 @@ python -m unittest tests.test_providers -v
 python -m unittest tests.test_isolation -v
 ```
 
-29 test files covering every module. Zero external test dependencies.
+31 test files covering every module. Zero external test dependencies.
 
 ---
 
@@ -316,8 +318,8 @@ python -m battousai.main
 - [x] Human-in-the-loop approval workflow for high-risk actions
 - [x] Memory integrity hashing (tamper detection)
 - [x] OS-level sandboxing (seccomp, namespaces, rlimits)
-- [ ] IPC message signing (HMAC)
-- [ ] Agent behavioral drift detection
+- [x] IPC message signing (HMAC)
+- [x] Agent behavioral drift detection
 
 ### v0.5.0 — Launch
 - [ ] Comprehensive security audit

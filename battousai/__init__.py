@@ -4,7 +4,17 @@ Battousai - Autonomous Intelligence Operating System
 An operating system designed exclusively for AI agents.
 No human users. No GUI. No terminal. Agents are first-class citizens.
 
-Version: 0.6.0
+Version: 0.8.0
+
+New in v0.8.0:
+    - Agent behavioral drift detection (drift.py): BehaviorProfile, DriftDetector,
+      DriftMonitor, DriftPolicy; cosine similarity + z-score multi-dimensional
+      drift scoring with configurable MONITOR/ALERT/THROTTLE/QUARANTINE responses
+
+New in v0.7.0:
+    - IPC message signing (ipc_signing.py): HMAC-SHA256 signing/verification,
+      KeyRing, SignedIPCManager, SigningPolicy (PERMISSIVE/SIGN_REQUIRED/STRICT),
+      SigningAuditor with full audit trail
 
 New in v0.6.0:
     - OS-level process sandbox (sandbox.py): seccomp-BPF, Linux namespaces,
@@ -152,6 +162,41 @@ from battousai.sandbox import (
     capability_to_profile,
 )
 
+# ---------------------------------------------------------------------------
+# IPC Message Signing (v0.7.0)
+# ---------------------------------------------------------------------------
+from battousai.ipc_signing import (
+    SigningKey,
+    KeyRing,
+    MessageSigner,
+    SignedMessage,
+    SigningPolicy,
+    SigningError,
+    SigningAuditor,
+    SignedIPCManager,
+    AuditEvent,
+    make_signed_message,
+    verify_signed_message,
+)
+
+# ---------------------------------------------------------------------------
+# Agent Behavioral Drift Detection (v0.8.0)
+# ---------------------------------------------------------------------------
+from battousai.drift import (
+    BehaviorEvent,
+    BehaviorProfile,
+    DriftScore,
+    DriftPolicy as DriftPolicyEnum,
+    DriftPolicyConfig,
+    DriftAlert,
+    DriftDetector,
+    DriftMonitor,
+    DriftReport,
+    make_detector,
+    make_monitor,
+    make_event,
+)
+
 __all__ = [
     # Core
     "Kernel",
@@ -239,5 +284,30 @@ __all__ = [
     "EnforcementReport",
     "SandboxResult",
     "capability_to_profile",
+    # IPC Message Signing (v0.7.0)
+    "SigningKey",
+    "KeyRing",
+    "MessageSigner",
+    "SignedMessage",
+    "SigningPolicy",
+    "SigningError",
+    "SigningAuditor",
+    "SignedIPCManager",
+    "AuditEvent",
+    "make_signed_message",
+    "verify_signed_message",
+    # Drift Detection (v0.8.0)
+    "BehaviorEvent",
+    "BehaviorProfile",
+    "DriftScore",
+    "DriftPolicyEnum",
+    "DriftPolicyConfig",
+    "DriftAlert",
+    "DriftDetector",
+    "DriftMonitor",
+    "DriftReport",
+    "make_detector",
+    "make_monitor",
+    "make_event",
 ]
 
