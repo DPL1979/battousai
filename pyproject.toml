@@ -5,34 +5,31 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "battousai"
 version = "0.3.0"
-description = "Autonomous Intelligence Operating System — an OS built exclusively for AI agents"
+description = "A lightweight Python runtime for sandboxed AI agents — capability-based security, fault-tolerant supervision, and memory isolation with zero dependencies."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
-    {name = "Battousai Project"}
+    {name = "DPL1979"}
 ]
-keywords = ["ai", "agents", "operating-system", "multi-agent", "autonomous"]
+keywords = ["ai", "agents", "security", "sandbox", "capability", "multi-agent", "supervision"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: System :: Operating System Kernels",
+    "Topic :: Security",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
+dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/DPL1979/battousai"
-Documentation = "https://dpl1979.github.io/battousai"
+Homepage   = "https://github.com/DPL1979/battousai"
 Repository = "https://github.com/DPL1979/battousai"
-Issues = "https://github.com/DPL1979/battousai/issues"
 
 [project.scripts]
 battousai = "battousai.main:main"
@@ -41,7 +38,7 @@ battousai = "battousai.main:main"
 include = ["battousai*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths    = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
