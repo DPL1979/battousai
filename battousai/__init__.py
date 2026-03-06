@@ -4,7 +4,11 @@ Battousai - Autonomous Intelligence Operating System
 An operating system designed exclusively for AI agents.
 No human users. No GUI. No terminal. Agents are first-class citizens.
 
-Version: 0.4.0
+Version: 0.5.0
+
+New in v0.5.0:
+    - Human-in-the-Loop Approval Workflow (approval.py): risk tiers, approval
+      gate, middleware integration with the kernel's syscall path
 
 New in v0.4.0:
     - MCP Server adapter (mcp_server.py): expose Battousai tools as an MCP server
@@ -88,6 +92,42 @@ from battousai.isolation import IsolatedAgentProcess, ProcessPool, SandboxConfig
 from battousai.mcp_server import MCPServer, MCPServerConfig, MCPProtocolError
 from battousai.mcp_client import MCPClient, MCPClientConfig, MCPConnectionError
 
+# ---------------------------------------------------------------------------
+# Human-in-the-Loop Approval Workflow (v0.5.0)
+# ---------------------------------------------------------------------------
+from battousai.approval import (
+    ApprovalGate,
+    ApprovalPolicy,
+    ApprovalRequest,
+    ApprovalResult,
+    ApprovalMiddleware,
+    ApprovalHandler,
+    AutoApproveHandler,
+    CallbackApprovalHandler,
+    CLIApprovalHandler,
+    RiskTier,
+    DEFAULT_RISK_MAP,
+)
+
+# ---------------------------------------------------------------------------
+# Memory Integrity (v0.5.0)
+# ---------------------------------------------------------------------------
+from battousai.integrity import (
+    HashChain,
+    SecureMemoryStore,
+    ToolRegistryVerifier,
+    IntegrityAuditor,
+    HashChainEntry,
+    IntegrityReport,
+    MemoryEntry as SecureMemoryEntry,
+    RegistrySignature,
+    AuditResult,
+    IntegrityError,
+    IntegrityViolation,
+    EntryNotFoundError,
+    EntryExpiredError,
+)
+
 __all__ = [
     # Core
     "Kernel",
@@ -135,5 +175,31 @@ __all__ = [
     "MCPClient",
     "MCPClientConfig",
     "MCPConnectionError",
+    # Approval workflow (v0.5.0)
+    "ApprovalGate",
+    "ApprovalPolicy",
+    "ApprovalRequest",
+    "ApprovalResult",
+    "ApprovalMiddleware",
+    "ApprovalHandler",
+    "AutoApproveHandler",
+    "CallbackApprovalHandler",
+    "CLIApprovalHandler",
+    "RiskTier",
+    "DEFAULT_RISK_MAP",
+    # Memory Integrity (v0.5.0)
+    "HashChain",
+    "SecureMemoryStore",
+    "ToolRegistryVerifier",
+    "IntegrityAuditor",
+    "HashChainEntry",
+    "IntegrityReport",
+    "SecureMemoryEntry",
+    "RegistrySignature",
+    "AuditResult",
+    "IntegrityError",
+    "IntegrityViolation",
+    "EntryNotFoundError",
+    "EntryExpiredError",
 ]
 

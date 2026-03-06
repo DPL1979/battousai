@@ -62,7 +62,7 @@ class Kernel:
         report = kernel.system_report()
     """
 
-    VERSION = "0.2.0"
+    VERSION = "0.3.0"
 
     def __init__(self, max_ticks: int = 50, debug: bool = False) -> None:
         self.max_ticks = max_ticks
