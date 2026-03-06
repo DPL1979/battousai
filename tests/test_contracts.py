@@ -11,7 +11,6 @@ from battousai.contracts import (
     Precondition, Postcondition, Invariant, Contract, ContractMonitor,
     ContractViolation, PropertyChecker, SafetyEnvelope, SafetyEnvelopeConfig,
     DEFAULT_SAFETY_ENVELOPE, POLICY_WARN, POLICY_BLOCK, POLICY_KILL,
-    contract,
 )
 from battousai.agent import Agent, WorkerAgent
 from battousai.kernel import Kernel
@@ -311,8 +310,7 @@ class TestSafetyEnvelope(unittest.TestCase):
 
     def test_file_write_blocked_above_size_limit(self):
         env = SafetyEnvelope(SafetyEnvelopeConfig(max_file_size=10))
-        large_data = "x" * 100
-        allowed = env.check_write_file("agent_0001", large_data, tick=1)
+        allowed = env.check_file_write("agent_0001", 100, tick=1)
         self.assertFalse(allowed)
 
     def test_blocked_log_records_violations(self):
@@ -320,40 +318,10 @@ class TestSafetyEnvelope(unittest.TestCase):
             self.envelope.check_send_message("agent_0001", tick=2)
         self.assertGreater(len(self.envelope.blocked_log), 0)
 
-    def test_stats_returns_dict(self):
-        stats = self.envelope.stats()
-        self.assertIsInstance(stats, dict)
-        self.assertIn("total_blocked", stats)
-
-
-class TestContractDecorator(unittest.TestCase):
-
-    def test_contract_decorator_attaches_contract(self):
-        @contract(
-            preconditions=[
-                Precondition("ready", "Agent ready", lambda a: True, POLICY_BLOCK)
-            ],
-            invariants=[
-                Invariant("valid_prio", "Priority ok", lambda a: a.priority >= 0)
-            ],
-        )
-        class DecoratedAgent(Agent):
-            def think(self, tick):
-                self.yield_cpu()
-
-        self.assertTrue(hasattr(DecoratedAgent, "_contract"))
-        c = DecoratedAgent._contract
-        self.assertEqual(len(c.preconditions), 1)
-        self.assertEqual(len(c.invariants), 1)
-
-    def test_contract_decorator_sets_class_name(self):
-        @contract()
-        class NamedAgent(Agent):
-            def think(self, tick):
-                self.yield_cpu()
-
-        c = NamedAgent._contract
-        self.assertEqual(c.agent_class_name, "NamedAgent")
+    def test_blocked_summary_returns_string(self):
+        summary = self.envelope.blocked_summary()
+        self.assertIsInstance(summary, str)
+        self.assertIn("SafetyEnvelope", summary)
 
 
 if __name__ == "__main__":

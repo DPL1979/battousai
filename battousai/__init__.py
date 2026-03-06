@@ -4,7 +4,13 @@ Battousai - Autonomous Intelligence Operating System
 An operating system designed exclusively for AI agents.
 No human users. No GUI. No terminal. Agents are first-class citizens.
 
-Version: 0.2.0
+Version: 0.3.0
+
+New in v0.3.0:
+    - Real LLM providers (providers.py): OpenAI, Anthropic, Ollama — zero deps
+    - Sandboxed filesystem (real_fs.py): real OS I/O with per-agent jails
+    - SQLite persistence (persistence.py): agent state, memory, audit logs
+    - Process isolation (isolation.py): subprocess-based agent sandboxing
 
 New in v0.2.0:
     - LLM integration (llm.py): LLMProvider, LLMAgent, ContextWindow
@@ -20,7 +26,7 @@ New in v0.2.0:
     - Formal verification & contracts (contracts.py): Design-by-Contract runtime
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __author__ = "Battousai Project"
 __description__ = "Autonomous Intelligence Operating System — an OS built for AI agents"
 
@@ -56,6 +62,22 @@ from battousai.supervisor import (
 from battousai.capabilities import CapabilityManager, CapabilityType, CapabilityViolation
 from battousai.contracts import ContractMonitor, Contract, SafetyEnvelope
 
+# ---------------------------------------------------------------------------
+# Real I/O layer (v0.3.0)
+# ---------------------------------------------------------------------------
+from battousai.providers import (
+    RealOpenAIProvider,
+    RealAnthropicProvider,
+    OllamaProvider,
+    HTTPProvider,
+    LLMProviderError,
+    AuthenticationError,
+    RateLimitError,
+)
+from battousai.real_fs import SandboxedFilesystem
+from battousai.persistence import PersistenceLayer
+from battousai.isolation import IsolatedAgentProcess, ProcessPool, SandboxConfig
+
 __all__ = [
     # Core
     "Kernel",
@@ -83,5 +105,18 @@ __all__ = [
     "ContractMonitor",
     "Contract",
     "SafetyEnvelope",
+    # Real I/O (v0.3.0)
+    "RealOpenAIProvider",
+    "RealAnthropicProvider",
+    "OllamaProvider",
+    "HTTPProvider",
+    "LLMProviderError",
+    "AuthenticationError",
+    "RateLimitError",
+    "SandboxedFilesystem",
+    "PersistenceLayer",
+    "IsolatedAgentProcess",
+    "ProcessPool",
+    "SandboxConfig",
 ]
 

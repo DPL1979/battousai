@@ -1,544 +1,327 @@
-# Battousai — Autonomous Intelligence Operating System
+# Battousai
 
-```
-  ██████╗  █████╗ ████████╗████████╗ ██████╗ ██╗   ██╗███████╗ █████╗ ██╗
-  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██╔═══██╗██║   ██║██╔════╝██╔══██╗██║
-  ██████╔╝███████║   ██║      ██║   ██║   ██║██║   ██║███████╗███████║██║
-  ██╔══██╗██╔══██║   ██║      ██║   ██║   ██║██║   ██║╚════██║██╔══██║██║
-  ██████╔╝██║  ██║   ██║      ██║   ╚██████╔╝╚██████╔╝███████║██║  ██║██║
-  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝
-```
+**A lightweight Python runtime for sandboxed AI agents — capability-based security, fault-tolerant supervision, and memory isolation in under 16K lines with zero dependencies.**
 
-**Version**: 2.0.0 | **Status**: Production-Ready | **License**: MIT
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests: 544 passing](https://img.shields.io/badge/tests-544%20passing-brightgreen.svg)](#testing)
+[![Dependencies: 0](https://img.shields.io/badge/dependencies-0-orange.svg)](#zero-dependencies)
 
 ---
 
-## What is Battousai?
+## Why Battousai?
 
-Battousai is a **production-grade autonomous AI agent operating system** built for enterprises that need reliable, scalable, and secure AI automation. Unlike simple chatbot frameworks, Battousai provides a complete runtime environment for deploying AI agents that can:
-
-- 🤖 **Operate autonomously** for hours or days without human intervention
-- 🔄 **Self-heal and recover** from failures automatically
-- 📊 **Scale horizontally** across distributed infrastructure
-- 🔒 **Enforce security policies** at the kernel level
-- 🧠 **Learn and adapt** through evolutionary algorithms
-- 🌐 **Federate** across multiple organizations and cloud providers
-
----
-
-## Architecture Overview
+Every AI agent framework lets agents do things. Battousai makes sure they **only** do what they're allowed to.
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│                    BATTOUSAI OPERATING SYSTEM                     │
-├──────────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │   Agent     │  │  Supervisor  │  │    Kernel    │  │   HAL       │  │
-│  │   Runtime   │  │   + Policy   │  │  + Security  │  │ + Telemetry │  │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │    LLM      │  │  Capabilities │  │    Memory    │  │   Tools     │  │
-│  │  Interface  │  │   Registry   │  │   Manager   │  │   Registry  │  │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │  Evolution  │  │  Federation  │  │  Contracts  │  │  Network    │  │
-│  │   Engine    │  │   Manager   │  │    Engine   │  │  Manager   │  │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+pip install battousai   # zero dependencies, works offline
 ```
 
----
+Most agent frameworks (LangGraph, CrewAI, AutoGen) assume you trust your agents. They run in-process, share memory, and have access to your entire host environment. When an agent goes rogue — through prompt injection, memory poisoning, or simple misalignment — there's nothing between it and your SSH keys.
 
-## Core Components
+Battousai is different. Every agent runs inside a **capability-gated sandbox** where file access, network calls, tool invocations, and memory writes require explicit capability tokens. If an agent doesn't have the token, the action is blocked and logged. No exceptions.
 
-### 1. Agent Runtime (`battousai/agent.py`)
-The heart of Battousai. Manages agent lifecycle, task execution, and state machines.
+### What makes it different
 
-```python
-from battousai import BattousaiOS
-
-os_instance = BattousaiOS(config)
-await os_instance.start()
-
-agent = await os_instance.spawn_agent(
-    name="research-agent",
-    role="researcher",
-    capabilities=["web_search", "document_analysis"],
-    model="gpt-4o"
-)
-
-result = await agent.execute_task({
-    "type": "research",
-    "query": "Latest developments in quantum computing",
-    "depth": "comprehensive"
-})
-```
-
-### 2. Kernel (`battousai/kernel.py`)
-Security-first kernel with mandatory access control, resource management, and policy enforcement.
-
-```python
-# Kernel enforces all security policies automatically
-# No explicit security code needed in agent logic
-kernel = Kernel(config)
-await kernel.start()
-
-# Agents automatically get sandboxed execution
-# Resource limits enforced at kernel level
-# All operations logged for audit trail
-```
-
-### 3. Supervisor (`battousai/supervisor.py`)
-Multi-agent orchestration with automatic load balancing, failure detection, and recovery.
-
-```python
-supervisor = Supervisor(kernel, config)
-
-# Launch 10 parallel research agents
-agents = await supervisor.spawn_pool(
-    role="researcher",
-    count=10,
-    task_queue="research_tasks"
-)
-
-# Automatic failover - if any agent dies, supervisor restarts it
-# Load balancing distributes tasks based on agent health scores
-```
-
-### 4. Evolution Engine (`battousai/evolution.py`)
-Genetic algorithm-based self-optimization that improves agent performance over time.
-
-```python
-evolution = EvolutionEngine(config)
-
-# Agents automatically evolve better strategies
-# No manual tuning required
-evolved_params = await evolution.evolve(
-    population_size=50,
-    generations=100,
-    fitness_fn=task_completion_rate
-)
-```
-
-### 5. Federation Manager (`battousai/federation.py`)
-Secure multi-organization agent collaboration with cryptographic identity and trust management.
-
-```python
-federation = FederationManager(config)
-
-# Connect with partner organization
-await federation.join_federation(
-    partner_endpoint="https://partner-battousai.example.com",
-    trust_level=TrustLevel.VERIFIED
-)
-
-# Delegate tasks to federated agents
-result = await federation.delegate_task(
-    task=complex_analysis_task,
-    partner="research-org"
-)
-```
-
-### 6. Contract Engine (`battousai/contracts.py`)
-Formal verification of agent behavior with pre/post conditions and invariant checking.
-
-```python
-@contract(
-    pre=[lambda self, task: task.priority >= 0],
-    post=[lambda self, result: result.confidence >= 0.7],
-    invariant=[lambda self: self.memory_usage < self.max_memory]
-)
-async def execute_task(self, task):
-    # Contract violations raise ContractError automatically
-    return await self._process(task)
-```
-
-### 7. HAL (Hardware Abstraction Layer) (`battousai/hal.py`)
-Unified interface for hardware, sensors, and external services.
-
-```python
-hal = HAL(config)
-
-# Unified interface regardless of underlying hardware
-sensor_data = await hal.read_sensor("camera_0")
-await hal.actuate("motor_1", velocity=0.5)
-
-# Automatic fallback to simulation in testing
-```
-
-### 8. Memory Manager (`battousai/memory.py`)
-Multi-tier memory with semantic search, episodic storage, and cross-agent sharing.
-
-```python
-memory = MemoryManager(config)
-
-# Store with automatic embedding and indexing
-await memory.store(
-    content="Customer prefers formal communication",
-    agent_id="sales-agent-1",
-    memory_type=MemoryType.EPISODIC
-)
-
-# Semantic retrieval across all memory tiers
-relevant = await memory.retrieve(
-    query="customer communication preferences",
-    k=5
-)
-```
+| Feature | Battousai | LangGraph | CrewAI | AutoGen | E2B | Modal |
+|---------|-----------|-----------|--------|---------|-----|-------|
+| **Capability-token security** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Erlang supervision trees** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Design-by-Contract invariants** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Zero external dependencies** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Self-hosted / air-gapped** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Process-level isolation** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **Per-agent filesystem jails** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **SQLite persistence (WAL)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
 ## Quick Start
 
-### Installation
-
-```bash
-# Install from PyPI
-pip install battousai
-
-# Install with all optional dependencies
-pip install battousai[all]
-
-# Development installation
-git clone https://github.com/DPL1979/battousai
-cd battousai
-pip install -e .[dev]
-```
-
-### Basic Usage
+### Hello World
 
 ```python
-import asyncio
-from battousai import BattousaiOS
-from battousai.schemas import BattousaiConfig, AgentRole
+from battousai.kernel import Kernel
+from battousai.agent import WorkerAgent
+from battousai.llm import MockLLMProvider
 
-async def main():
-    # Initialize the OS
-    config = BattousaiConfig(
-        llm_provider="openai",
-        llm_model="gpt-4o",
-        max_agents=10,
-        security_level="standard"
-    )
-    
-    os_instance = BattousaiOS(config)
-    await os_instance.start()
-    
-    # Create an agent
-    agent = await os_instance.spawn_agent(
-        name="my-agent",
-        role=AgentRole.GENERALIST,
-        capabilities=["web_search", "code_execution", "file_management"]
-    )
-    
-    # Execute a task
-    result = await agent.execute_task({
-        "type": "analysis",
-        "data": "quarterly_report.pdf",
-        "output_format": "executive_summary"
-    })
-    
-    print(f"Task completed: {result.success}")
-    print(f"Output: {result.output}")
-    
-    await os_instance.shutdown()
+# Boot the kernel
+kernel = Kernel(max_ticks=5)
+kernel.boot()
 
-asyncio.run(main())
+# Spawn a sandboxed agent
+agent_id = kernel.spawn_agent(WorkerAgent, name="researcher", priority=5)
+
+# Run the event loop
+kernel.run()
 ```
 
-### Multi-Agent Pipeline
+### Real LLM Providers (v0.3.0)
 
 ```python
-async def research_pipeline():
-    os_instance = BattousaiOS(config)
-    await os_instance.start()
-    
-    # Spawn specialized agents
-    researcher = await os_instance.spawn_agent(
-        name="researcher",
-        role=AgentRole.RESEARCHER,
-        capabilities=["web_search", "document_analysis"]
-    )
-    
-    analyst = await os_instance.spawn_agent(
-        name="analyst",
-        role=AgentRole.ANALYST,
-        capabilities=["data_analysis", "visualization"]
-    )
-    
-    writer = await os_instance.spawn_agent(
-        name="writer",
-        role=AgentRole.WRITER,
-        capabilities=["content_generation", "editing"]
-    )
-    
-    # Pipeline: research -> analyze -> write
-    research_data = await researcher.execute_task({
-        "type": "research",
-        "topic": "AI trends 2025",
-        "depth": "comprehensive"
-    })
-    
-    analysis = await analyst.execute_task({
-        "type": "analyze",
-        "data": research_data.output,
-        "focus": "key_insights"
-    })
-    
-    report = await writer.execute_task({
-        "type": "write",
-        "content": analysis.output,
-        "format": "executive_report"
-    })
-    
-    return report
+from battousai.providers import RealOpenAIProvider, RealAnthropicProvider, OllamaProvider
+
+# OpenAI — uses stdlib urllib, no openai package needed
+openai = RealOpenAIProvider(api_key="sk-...", model="gpt-4o")
+response = openai.generate("Analyze this security report", max_tokens=2000)
+
+# Anthropic — same pattern
+claude = RealAnthropicProvider(api_key="sk-ant-...", model="claude-sonnet-4-20250514")
+
+# Ollama — local models, no API key
+ollama = OllamaProvider(model="llama3")
+```
+
+### Sandboxed Filesystem
+
+```python
+from battousai.real_fs import SandboxedFilesystem
+
+# Each agent gets a jail — path traversal is impossible
+fs = SandboxedFilesystem(base_dir="/tmp/battousai-sandbox")
+agent_root = fs.create_agent_jail("agent_001")
+
+fs.write_file("agent_001", "notes.txt", "Research findings...")
+content = fs.read_file("agent_001", "notes.txt")
+
+# This raises SecurityViolation — agent can't escape its jail
+fs.read_file("agent_001", "../../etc/passwd")
+```
+
+### Checkpoint & Restore
+
+```python
+from battousai.persistence import PersistenceLayer
+
+db = PersistenceLayer("/tmp/battousai.db")
+
+# Save agent state (uses SQLite WAL mode for concurrent access)
+db.save_checkpoint("agent_001", {"task": "research", "progress": 0.7})
+
+# Restore after crash
+state = db.load_checkpoint("agent_001")
+```
+
+### Process Isolation
+
+```python
+from battousai.isolation import IsolatedAgentProcess, SandboxConfig
+
+config = SandboxConfig(
+    max_memory_mb=256,
+    max_cpu_time_seconds=30,
+    allowed_paths=["/tmp/agent-workspace"],
+    network_enabled=False
+)
+
+# Agent runs in a separate process with enforced limits
+proc = IsolatedAgentProcess(agent_id="untrusted_agent", config=config)
+proc.start()
 ```
 
 ---
 
-## Configuration
+## Security Model
 
-### Full Configuration Reference
+Battousai enforces security at three levels:
 
-```yaml
-# battousai.yaml
-battousai:
-  version: "2.0"
-  
-  # LLM Configuration
-  llm:
-    provider: openai          # openai, anthropic, google, local
-    model: gpt-4o
-    fallback_model: gpt-3.5-turbo
-    max_tokens: 4096
-    temperature: 0.7
-    timeout: 30
-    
-  # Agent Configuration  
-  agents:
-    max_concurrent: 50
-    default_timeout: 300      # seconds
-    max_retries: 3
-    heartbeat_interval: 10
-    
-  # Security Configuration
-  security:
-    level: standard           # minimal, standard, strict, paranoid
-    enable_sandboxing: true
-    allowed_operations:
-      - file_read
-      - file_write
-      - network_outbound
-    blocked_operations:
-      - system_exec
-      - privilege_escalation
-    audit_log: true
-    
-  # Memory Configuration
-  memory:
-    backend: redis            # redis, postgres, sqlite, in_memory
-    max_entries_per_agent: 10000
-    embedding_model: text-embedding-ada-002
-    eviction_policy: lru
-    
-  # Federation Configuration
-  federation:
-    enabled: false
-    trust_registry: "https://trust.battousai.io"
-    max_partners: 10
-    
-  # Evolution Configuration
-  evolution:
-    enabled: false
-    population_size: 20
-    generation_interval: 3600  # seconds
-    fitness_metric: task_success_rate
-    
-  # Monitoring
-  monitoring:
-    metrics_port: 9090
-    log_level: INFO
-    enable_tracing: true
-    trace_endpoint: "http://jaeger:14268/api/traces"
+### 1. Capability Tokens
+Every resource access requires an explicit capability token. No ambient authority.
+
+```python
+from battousai.capabilities import CapabilityManager, CapabilityType
+
+cap_mgr = CapabilityManager()
+
+# Grant specific capabilities — agent can read files but not write
+cap_mgr.grant(agent_id, CapabilityType.FILE_READ)
+# cap_mgr.grant(agent_id, CapabilityType.FILE_WRITE)  # NOT granted
+
+# Every syscall checks capabilities before executing
+# Unauthorized access → blocked + audit logged
 ```
+
+### 2. Safety Envelope
+Hard limits that override all other policies:
+
+```python
+from battousai.contracts import SafetyEnvelope, SafetyEnvelopeConfig
+
+envelope = SafetyEnvelope(SafetyEnvelopeConfig(
+    max_messages_per_tick=10,
+    max_tool_calls_per_tick=5,
+    max_file_size=1_000_000,         # 1MB max per file write
+    forbidden_tools=["shell_exec"],   # Absolute blocklist
+    max_total_agents=20,              # Prevent fork bombs
+))
+```
+
+### 3. Design-by-Contract
+Agents declare behavioral contracts verified at runtime:
+
+```python
+from battousai.contracts import Contract, Invariant, POLICY_KILL
+
+contract = (Contract(name="SafeResearcher", agent_class_name="WorkerAgent")
+    .add_invariant(Invariant(
+        name="memory_bound",
+        description="Agent memory must stay under limit",
+        check=lambda agent: agent.memory_usage < 100_000,
+        on_violation="KILL"  # Terminate immediately if violated
+    )))
+```
+
+### OWASP Agentic AI Alignment
+
+Battousai maps to all 10 risks in the [OWASP Top 10 for Agentic Applications (2026)](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/). See [`docs/owasp-alignment.md`](docs/owasp-alignment.md) for the full analysis.
 
 ---
 
-## Deployment
+## Architecture
 
-### Docker
-
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-COPY pyproject.toml .
-RUN pip install battousai[all]
-
-COPY battousai.yaml .
-COPY agents/ ./agents/
-
-CMD ["python", "-m", "battousai.main"]
+```
+┌─────────────────────────────────────────────────────────┐
+│                  BATTOUSAI RUNTIME                       │
+├──────────────┬──────────────┬──────────────┬────────────┤
+│   Kernel     │  Supervisor  │  Contracts   │  Scheduler │
+│  (syscalls,  │  (Erlang     │  (pre/post/  │  (priority │
+│   security)  │   trees)     │   invariant) │   ticks)   │
+├──────────────┼──────────────┼──────────────┼────────────┤
+│ Capabilities │   Memory     │  Filesystem  │    IPC     │
+│  (tokens,    │  (isolated   │  (per-agent  │  (mailbox, │
+│   audit)     │   regions)   │   jails)     │   board)   │
+├──────────────┼──────────────┼──────────────┼────────────┤
+│  Providers   │ Persistence  │  Isolation   │   Tools    │
+│  (OpenAI,    │  (SQLite     │  (process    │  (registry │
+│   Claude,    │   WAL,       │   pools,     │   + gate)  │
+│   Ollama)    │   restore)   │   sandbox)   │            │
+└──────────────┴──────────────┴──────────────┴────────────┘
 ```
 
-```bash
-docker build -t my-battousai-app .
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY my-battousai-app
+### Core Modules (24 files, ~14,600 lines)
+
+| Module | Purpose |
+|--------|---------|
+| `kernel.py` | Central coordinator, syscall dispatch, event loop |
+| `agent.py` | Agent base classes, lifecycle, state machines |
+| `capabilities.py` | Capability tokens, security policies, audit trail |
+| `contracts.py` | Design-by-Contract, SafetyEnvelope, PropertyChecker |
+| `supervisor.py` | Erlang-style supervision trees (one_for_one, one_for_all, rest_for_one) |
+| `memory.py` | Per-agent memory spaces, shared regions, typed schemas |
+| `filesystem.py` | Virtual filesystem with permissions |
+| `real_fs.py` | **NEW** — Sandboxed real filesystem with per-agent jails |
+| `providers.py` | **NEW** — Real LLM providers (OpenAI, Anthropic, Ollama) via stdlib |
+| `persistence.py` | **NEW** — SQLite persistence with WAL mode, checkpoint/restore |
+| `isolation.py` | **NEW** — Process-level agent isolation, sandbox configs |
+| `scheduler.py` | Priority-based tick scheduler (10 levels) |
+| `ipc.py` | Inter-agent messaging, mailboxes, bulletin board |
+| `network.py` | Gossip protocol, service discovery |
+| `federation.py` | Raft consensus, multi-kernel coordination |
+| `evolution.py` | Code sandbox, genetic algorithms |
+| `tools.py` | Tool registry and capability-gated invocation |
+
+---
+
+## Fault Tolerance
+
+Battousai uses **Erlang-style supervision trees** — the same pattern that gives Erlang systems nine-nines uptime.
+
+```python
+from battousai.supervisor import SupervisorAgent
+
+# If a child agent crashes, the supervisor restarts it automatically
+# Strategies: one_for_one, one_for_all, rest_for_one
+supervisor = SupervisorAgent(
+    name="research_team",
+    strategy="one_for_one",
+    max_restarts=5,
+    restart_window=20  # ticks
+)
 ```
 
-### Kubernetes
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: battousai
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: battousai
-  template:
-    metadata:
-      labels:
-        app: battousai
-    spec:
-      containers:
-      - name: battousai
-        image: myregistry/battousai:2.0.0
-        env:
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: api-keys
-              key: openai
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "2000m"
-```
-
-### Docker Compose
-
-```yaml
-version: '3.8'
-services:
-  battousai:
-    build: .
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - "8000:8000"
-      - "9090:9090"
-      
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-      
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: battousai
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-      
-volumes:
-  redis_data:
-  pg_data:
-```
+When an agent fails:
+- **one_for_one** — only the failed agent restarts
+- **one_for_all** — all siblings restart (for tightly coupled workflows)
+- **rest_for_one** — the failed agent and all agents started after it restart
 
 ---
 
 ## Testing
 
 ```bash
-# Run all tests
-pytest tests/ -v
+# Run all 544 tests (takes ~0.2 seconds)
+python -m unittest discover -s tests -v
 
-# Run with coverage
-pytest tests/ --cov=battousai --cov-report=html
+# Run a specific module
+python -m unittest tests.test_contracts -v
+python -m unittest tests.test_providers -v
+python -m unittest tests.test_isolation -v
+```
 
-# Run specific test categories
-pytest tests/ -m "unit"
-pytest tests/ -m "integration"
-pytest tests/ -m "performance"
+24 test files covering every module. Zero external test dependencies.
 
-# Run with parallel execution
-pytest tests/ -n auto
+---
+
+## Zero Dependencies
+
+Battousai uses **only the Python standard library**. No pip packages, no native extensions, no Docker required.
+
+- HTTP requests → `urllib.request`
+- JSON handling → `json`
+- Persistence → `sqlite3`
+- Process isolation → `multiprocessing`
+- Crypto hashing → `hashlib`
+- Logging → built-in `logging`
+
+This means:
+- `pip install battousai` just works, everywhere
+- Air-gapped deployments need nothing beyond Python 3.10+
+- No supply chain risk from third-party packages
+- No version conflicts with your existing project
+
+---
+
+## Examples
+
+```bash
+# Security demo — shows capability enforcement in action
+python examples/security_demo.py
+
+# Minimal quickstart
+python examples/quickstart.py
+
+# Run the full kernel with agents
+python -m battousai.main
 ```
 
 ---
 
-## Performance Benchmarks
+## Documentation
 
-| Metric | Value | Conditions |
-|--------|-------|------------|
-| Agent spawn time | < 50ms | Cold start |
-| Task throughput | 1000+ tasks/sec | 50 agents, simple tasks |
-| Memory overhead | ~15MB/agent | Baseline |
-| LLM call latency | Provider-dependent | GPT-4o: ~2s avg |
-| Federation handshake | < 200ms | LAN |
-| Evolution cycle | < 60s | 20 agents, 10 generations |
-
----
-
-## Security Model
-
-### Defense in Depth
-
-```
-┌───────────────────────────────────────────────────┐
-│           SECURITY LAYERS                   │
-├───────────────────────────────────────────────────┤
-│  Layer 1: Input Validation & Sanitization    │
-│  Layer 2: Authentication & Authorization     │
-│  Layer 3: Capability-Based Access Control    │
-│  Layer 4: Kernel Policy Enforcement          │
-│  Layer 5: Sandboxed Execution Environment    │
-│  Layer 6: Audit Logging & Anomaly Detection  │
-│  Layer 7: Cryptographic Verification         │
-└───────────────────────────────────────────────────┘
-```
-
-### Security Levels
-
-| Level | Use Case | Restrictions |
-|-------|----------|--------------|
-| `minimal` | Development | None |
-| `standard` | Production | Basic sandboxing |
-| `strict` | Financial/Healthcare | Full isolation |
-| `paranoid` | Government/Defense | Air-gapped execution |
+- [`docs/owasp-alignment.md`](docs/owasp-alignment.md) — Maps all 10 OWASP Agentic AI risks to Battousai
+- [`docs/comparison.md`](docs/comparison.md) — Honest comparison vs CrewAI, AutoGen, LangGraph, E2B, Modal, Daytona
 
 ---
 
 ## Roadmap
 
-### v2.1 (Q2 2025)
-- [ ] WebAssembly agent sandbox
-- [ ] GraphQL API for agent management
-- [ ] Native Kubernetes operator
-- [ ] Multi-modal agent support (vision, audio)
+### v0.4.0 — MCP & Human-in-the-Loop
+- [ ] MCP server adapter (expose tools as MCP-compatible)
+- [ ] MCP client adapter (connect to external MCP servers with capability gating)
+- [ ] Human-in-the-loop approval workflow for high-risk actions
+- [ ] Memory integrity hashing (tamper detection)
 
-### v2.2 (Q3 2025)
-- [ ] Agent marketplace integration
-- [ ] Automated prompt optimization
-- [ ] Real-time collaboration between federated agents
-- [ ] Cost optimization engine
+### v0.5.0 — Production Hardening
+- [ ] seccomp/namespace isolation (Linux)
+- [ ] Sandbox profiles (macOS)
+- [ ] IPC message signing (HMAC)
+- [ ] Agent behavioral drift detection
 
-### v3.0 (Q4 2025)
-- [ ] Physical robot integration via ROS2
-- [ ] Quantum-resistant cryptography
-- [ ] On-device model execution (Apple Silicon, NVIDIA Jetson)
-- [ ] Formal verification of agent behavior
+### v1.0.0 — Production Ready
+- [ ] Comprehensive security audit
+- [ ] Performance benchmarks
+- [ ] PyPI stable release
+- [ ] GitHub Codespace one-click demo
 
 ---
 
@@ -547,18 +330,9 @@ pytest tests/ -n auto
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ```bash
-# Fork and clone
-git clone https://github.com/YOUR_USERNAME/battousai
+git clone https://github.com/DPL1979/battousai.git
 cd battousai
-
-# Create feature branch
-git checkout -b feature/my-feature
-
-# Make changes, run tests
-pytest tests/ -v
-
-# Submit PR
-git push origin feature/my-feature
+python -m unittest discover -s tests -v  # all tests should pass
 ```
 
 ---
@@ -569,26 +343,4 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## Acknowledgments
-
-Built with:
-- **asyncio** — Async Python runtime
-- **Pydantic** — Data validation
-- **aiohttp** — Async HTTP
-- **Redis** — Memory backend
-- **PostgreSQL** — Persistent storage
-- **OpenTelemetry** — Distributed tracing
-
----
-
-*Battousai: Named after the legendary sword master who mastered the art of swift, decisive action.*
-
----
-
-## Future Hardware Integration
-
-Planned for v3.0: Direct hardware integration replacing the current simulation layer:
-
-- **GPIO Support**: Direct hardware pin control on embedded systems
-- **ROS2 Integration**: Full Robot Operating System 2 compatibility
-- **Vision Pipeline**: Real camera, and sensor integration replacing `SimulatedHardware`; target: Raspberry Pi and NVIDIA Jetson
+*Battousai (抜刀斎) — "one who draws the sword." Named for decisive, swift action under constraint.*

@@ -35,3 +35,25 @@ env/
 # Databases
 *.db
 *.sqlite3
+
+# Workspace artifacts (temp files from prior sessions)
+/_batch*.json
+/all_batches.json
+/batch*.json
+/batch*.py
+/*_batch*.json
+/push_*.json
+/push_*.txt
+/push_result.txt
+/rename_*.json
+/rename_*.txt
+/rename_push_result.txt
+/infra_*.json
+/infra_*.txt
+/content_*.txt
+/docs_summary*.txt
+/*_workflow.yml
+aios/
+context/
+skills/
+tool_calls/
